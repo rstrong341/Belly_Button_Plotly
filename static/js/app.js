@@ -4,16 +4,17 @@ function buildMetadata(sample){
     d3.json("samples.json").then(function(data){
         //set a variable to manipulate metadata specifically
         var metadata = data.metadata;
-
+        //Set up filter to have the id link to the sample        
         var resultsArray = metadata.filter(function(data){
             return data.id == sample;
         })
         console.log(resultsArray)
         var result = resultsArray[0];
+        //Set up variable to represent the correct section of html
         var PANEL = d3.select("#sample-metadata");
 
         PANEL.html("");
-
+        //Seperate and print values for ID, Ethinicity, Gender ... 
         Object.entries(result).forEach(function([key,value]){
             PANEL.append("h6").text(`${key.toUpperCase()}: ${value}`);
         })
@@ -46,7 +47,20 @@ function buildCharts(sample){
         var bubbleLayout = {
             title: "Bacteria Cultures Per Sample",
             hovermode: "closest",
-            xaxis: { title:"OTU ID"},
+            xaxis: {
+                title: 'OTU ID',
+                titlefont: {
+                  family: 'Arial, sans-serif',
+                  size: 18,
+                  color: 'lightgrey'
+                }},
+            yaxis: {
+                title: 'Sample Values',
+                titlefont: {
+                  family: 'Arial, sans-serif',
+                  size: 18,
+                  color: 'lightgrey'
+                }},
             margin: {t:30}
         }
         //Set up graph
@@ -63,7 +77,7 @@ function buildCharts(sample){
                 }
             }
         ];
-
+        //call  bubble functions using plotly
         Plotly.newPlot("bubble", bubbleData, bubbleLayout);
 
         var yticks = otu_ids.slice(0,10).map(function(otuID) {
@@ -82,9 +96,16 @@ function buildCharts(sample){
 
         var barLayout = {
             title: "Top Bacteria Cultures Found",
+            yaxis: {
+                title: 'OTU ID',
+                titlefont: {
+                  family: 'Arial, sans-serif',
+                  size: 18,
+                  color: 'lightgrey'
+                }},
             margin: {t:30, l: 150}
         };
-
+        //Call barfunctions using plotly
         Plotly.newPlot("bar", barData, barLayout);
     })
 }
